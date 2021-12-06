@@ -2,8 +2,6 @@ import sys
 
 def unpunch(board, numbers):
     flat = [e for line in board for e in line]
-    print(flat)
-    print(numbers)
     return sum([int(n) for n in list(set(flat) - set(numbers))])
 
 
@@ -44,7 +42,6 @@ with open('input', 'r') as f:
         for board in boards:
             if winning_board := check(board, numbers[0:slice]):
                 last_number = int(numbers[0:slice].pop())
-                print(last_number)
                 print(winning_board * last_number)
                 sys.exit()
 
