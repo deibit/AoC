@@ -1,19 +1,24 @@
 with open('input', 'r') as f:
     data = list(map(int, f.read().split(',')))
 
+def stepper(steps):
+    return (steps * (1 + steps)) // 2
+
 def align(data):
     data.sort()
     s = set(data)
-    d = {k: 0 for k in s}
+    m = max(s)
+    d = {k: 0 for k in range(m)}
 
     for k in d.keys():
         l = []
         for pos in data:
-            l.append(abs(pos-k))
+            n = stepper(abs(pos-k))
+            l.append(n)
         d[k] = l
 
     return d
 
 d = align(data)
-l = min([sum(v) for v in d.values()])
-print(l)
+s = min([sum(v) for v in d.values()])
+print(s)
