@@ -22,7 +22,6 @@ with open('input', 'r') as f:
 
     flashes = 0
     flash_cache = []
-    syncro = 0
 
     def flash(x, y):
         global flash_cache
