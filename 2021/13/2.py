@@ -36,7 +36,7 @@ with open('input', 'r') as f:
         coors = list(set(tmp))
 
     debug()
-    for c, (order, value) in enumerate(folds):
+    for order, value in folds:
         print('----')
         horz = True if order == 'x' else False
         fold(value, horz)
