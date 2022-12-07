@@ -10,12 +10,11 @@ const rules = {
 };
 const values = { X: 1, Y: 2, Z: 3 };
 try {
-  let contents = await readFile("input", { encoding: "utf8" });
+  const contents = await readFile("input", { encoding: "utf8" });
   let lines = contents.split("\n");
   let acc = 0;
   lines.map((e) => {
-    let l, r;
-    [l, r] = e.split(" ");
+    let [l, r] = e.split(" ");
     acc += rules[l][r] + values[r];
   });
   console.log(acc);

@@ -6,12 +6,11 @@ try {
     B: { X: 1, Y: 5, Z: 9 },
     C: { X: 2, Y: 6, Z: 7 },
   };
-  let contents = await readFile("input", { encoding: "utf8" });
+  const contents = await readFile("input", { encoding: "utf8" });
   let lines = contents.split("\n");
   let acc = 0;
   lines.map((e) => {
-    let l, r;
-    [l, r] = e.split(" ");
+    let [l, r] = e.split(" ");
     acc += rules[l][r];
   });
   console.log(acc);
