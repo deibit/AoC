@@ -28,10 +28,8 @@ def get_score(row, col, grid, max):
             check(row + i, col, south)
         if flags[east] and col + i < max:
             check(row, col + i, east)
-    final_score = 1
-    for score in scores:
-        final_score *= score
-    return final_score
+
+    return reduce(lambda x, y: x * y, scores)
 
 
 data = get_data("input")
