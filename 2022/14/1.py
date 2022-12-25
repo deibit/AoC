@@ -112,6 +112,7 @@ while flag:
         grid[salt[1]][salt[0]] = SALT
         move = next_move(*salt)
         if not move:
+            print(salt)
             grid[salt[1]][salt[0]] = AIR
             flag = False
             break
