@@ -37,31 +37,28 @@ def contour(sensor: Sensor, limit_inf, limit_sup):
     f = sensor.m + 1
     candidates = []
 
-    for xx, yy in zip(range(1, f + 2), range(y - f, y + 1)):
-        X = x - xx + 1
-        if (X >= limit_inf and yy >= limit_inf) and (
-            X <= limit_sup and yy <= limit_sup
-        ):
-            candidates.append(Point(X, yy))
+    def not_outside(x, y):
+        return (x >= limit_inf and y >= limit_inf) and (
+            x <= limit_sup and y <= limit_sup
+        )
 
-        X = x + xx - 1
-        if (X >= limit_inf and yy >= limit_inf) and (
-            X <= limit_sup and yy <= limit_sup
-        ):
-            candidates.append(Point(X, yy))
+    for xx, yy in zip(range(1, f + 2), range(y - f, y + 1)):
+        xx = x - xx + 1
+        if not_outside(xx, yy):
+            candidates.append(Point(xx, yy))
+
+        xx = x + xx - 1
+        if not_outside(xx, yy):
+            candidates.append(Point(xx, yy))
 
     for xx, yy in zip(range(f, -1, -1), range(y + 1, y + f + 1)):
-        X = x - xx + 1
-        if (X >= limit_inf and yy >= limit_inf) and (
-            X <= limit_sup and yy <= limit_sup
-        ):
-            candidates.append(Point(X, yy))
+        xx = x - xx + 1
+        if not_outside(xx, yy):
+            candidates.append(Point(xx, yy))
 
-        X = x + xx - 1
-        if (X >= limit_inf and yy >= limit_inf) and (
-            X <= limit_sup and yy <= limit_sup
-        ):
-            candidates.append(Point(X, yy))
+        xx = x + xx - 1
+        if not_outside(xx, yy):
+            candidates.append(Point(xx, yy))
 
     return candidates
 
