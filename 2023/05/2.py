@@ -1,3 +1,14 @@
+"""
+
+My solution involve some brute force which I assume is not the optimal way to go.
+
+Currently it is just a reverse mapping. BT from the lowest location (or 0) up until a valid seed is found.
+
+Some strategies could be to merge overlapping seed ranges. But I'm too lazy today to do it and test it.
+
+"""
+
+
 import re
 
 
