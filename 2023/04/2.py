@@ -11,7 +11,6 @@ Yes, the Lincoln quote paid it
 import re
 
 cards = [0 for _ in range(0, 212)]
-accum = 0
 
 
 def process(filename, sep):
