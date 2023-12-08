@@ -1,7 +1,7 @@
 """
 This problem is awesome.
 
-Took me two days thinking in the solution and 5 minutes to implement import
+Took me two days thinking in the solution and 5 minutes to implement it 
 
 Yes, the Lincoln quote paid it
 
