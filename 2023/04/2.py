@@ -14,7 +14,6 @@ cards = [0 for _ in range(0, 212)]
 
 
 def process(filename, sep):
-    global prices, cards, accum
     for line in open(filename):
         numbers = re.findall(r"\d+", line)
         numbers = [int(n) for n in numbers]
