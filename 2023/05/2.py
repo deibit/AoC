@@ -15,21 +15,20 @@ class Map:
         return f"{self.name}: {self.maps}"
 
     def map(self, value):
-        print(f"Using map {self.name} for value: {value}")
         for m in self.maps:
-            dest, source, delta = m
+            source, dest, delta = m  # change dest <-> source for part 2
             if source <= value <= source + delta:
                 result = dest + abs(source - value)
-                print(f"returning {result}")
                 return result
         return value
 
 
 lines = get_lines("input.txt")
 seeds = [int(n) for n in re.findall(r"\d+", lines[0].split(":")[1])]
+
+
 lines = lines[1:]
 maps = []
-
 
 current_map = None
 for line in lines:
@@ -41,12 +40,22 @@ for line in lines:
         if current_map:
             current_map.maps.append([int(n) for n in re.findall(r"\d+", line)])
 maps.append(current_map)
+maps.reverse()
 
 
-locations = []
-for seed in seeds:
+def check_seed(value):
+    for r in range(0, len(seeds), 2):
+        if seeds[r] <= value <= seeds[r] + seeds[r + 1]:
+            return True
+    return False
+
+
+location = 0
+while True:
+    seed = location
     for m in maps:
         seed = m.map(seed)
-    locations.append(seed)
-
-print(min(locations))
+    if check_seed(seed):
+        print(f"found seed {seed} which gives location {location}")
+        exit()
+    location += 1

@@ -23,7 +23,7 @@ class Map:
         return value
 
 
-lines = get_lines("input.txt")
+lines = get_lines("sample.txt")
 seeds = [int(n) for n in re.findall(r"\d+", lines[0].split(":")[1])]
 lines = lines[1:]
 maps = []
