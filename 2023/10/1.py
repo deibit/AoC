@@ -15,11 +15,8 @@ class Point:
         self.col = col
         self.level = level
 
-    def symbol(self) -> str:
-        return grid[self.row][self.col]
-
     def __str__(self):
-        return f"{self.row}:{self.col} lvl:{self.level} sym:{self.symbol()}"
+        return f"{self.row}:{self.col} lvl:{self.level} sym:{grid[self.row][self.col]}"
 
 
 def grid_get_point(row, col):
@@ -70,38 +67,37 @@ def surround(point: Point) -> List[Point]:
     if not point:
         return []
 
-    symbol = point.symbol()
+    symbol = grid[point.row][point.col]
     feasibles = []
 
     match symbol:
         case ".":
             return feasibles
         case "|":
-            return check_directions(["north", "south"], point)
+            feasibles.extend(check_directions(["north", "south"], point))
         case "-":
-            return check_directions(["west", "east"], point)
+            feasibles.extend(check_directions(["west", "east"], point))
         case "L":
-            return check_directions(["north", "east"], point)
+            feasibles.extend(check_directions(["north", "east"], point))
         case "J":
-            return check_directions(["north", "west"], point)
+            feasibles.extend(check_directions(["north", "west"], point))
         case "7":
-            return check_directions(["south", "west"], point)
+            feasibles.extend(check_directions(["south", "west"], point))
         case "F":
-            return check_directions(["south", "east"], point)
+            feasibles.extend(check_directions(["south", "east"], point))
         case "S":
-            return check_directions(["north", "west", "south", "east"], point)
+            feasibles.extend(
+                check_directions(["north", "west", "south", "east"], point)
+            )
+
+    feasibles = [new for new in feasibles if not (new.row, new.col) in visited]
+    for p in feasibles:
+        p.level = point.level + 1
     return feasibles
 
 
 visited = []
 pending: List[Point] = [start()]
-
-
-def explore(point: Point):
-    points = [new for new in surround(point) if not (new.row, new.col) in visited]
-    for p in points:
-        p.level = point.level + 1
-    return points
 
 
 while pending:
@@ -112,5 +108,5 @@ while pending:
         print(f"[FOUND END] {next}")
         break
 
-    pending.extend(explore(next))
+    pending.extend(surround(next))
     visited.append((next.row, next.col))
