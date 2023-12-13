@@ -1,5 +1,7 @@
 from typing import List, Tuple
 
+from colorama import Fore
+
 FILE = "input.txt"
 
 grid: List[List[str]] = [
@@ -15,14 +17,8 @@ class Point:
         self.col = col
         self.level = level
 
-    def symbol(self) -> str:
-        return grid[self.row][self.col]
-
-    def hash(self):
-        return f"{self.row}-{self.col}"
-
     def __str__(self):
-        return f"{self.row}:{self.col} lvl:{self.level} sym:{self.symbol()}"
+        return f"{self.row}:{self.col} lvl:{self.level} sym:{grid[self.row][self.col]}"
 
 
 def grid_get_point(row, col):
@@ -73,54 +69,126 @@ def surround(point: Point) -> List[Point]:
     if not point:
         return []
 
-    symbol = point.symbol()
+    symbol = grid[point.row][point.col]
     feasibles = []
 
     match symbol:
         case ".":
             return feasibles
         case "|":
-            return check_directions(["north", "south"], point)
+            feasibles.extend(check_directions(["north", "south"], point))
         case "-":
-            return check_directions(["west", "east"], point)
+            feasibles.extend(check_directions(["west", "east"], point))
         case "L":
-            return check_directions(["north", "east"], point)
+            feasibles.extend(check_directions(["north", "east"], point))
         case "J":
-            return check_directions(["north", "west"], point)
+            feasibles.extend(check_directions(["north", "west"], point))
         case "7":
-            return check_directions(["south", "west"], point)
+            feasibles.extend(check_directions(["south", "west"], point))
         case "F":
-            return check_directions(["south", "east"], point)
+            feasibles.extend(check_directions(["south", "east"], point))
         case "S":
-            return check_directions(["north", "west", "south", "east"], point)
+            feasibles.extend(
+                check_directions(["north", "west", "south", "east"], point)
+            )
+
+    feasibles = [new for new in feasibles if not (new.row, new.col) in visited]
+    for p in feasibles:
+        p.level = point.level + 1
     return feasibles
 
 
 visited = []
-pending: List[Point] = [start()]
-
-
-def check_visited(point):
-    hashes = [p.hash() for p in visited]
-    if point.hash() in hashes:
-        return True
-    return False
-
-
-def explore(point: Point):
-    points = [new for new in surround(point) if not check_visited(new)]
-    for p in points:
-        p.level = point.level + 1
-    return points
+pending = [start()]
 
 
 while pending:
     next = pending[0]
     pending = pending[1:]
 
-    if check_visited(next):
+    if (next.row, next.col) in visited:
         print(f"[FOUND END] {next}")
         break
 
-    pending.extend(explore(next))
-    visited.append(next)
+    pending.extend(surround(next))
+    visited.append((next.row, next.col))
+
+
+def check_directions2(point):
+    row = point[0]
+    col = point[1]
+    pointeables = [
+        (row - 1, col),
+        (row - 1, col - 1),
+        (row - 1, col + 1),
+        (row + 1, col),
+        (row + 1, col - 1),
+        (row + 1, col + 1),
+        (row, col - 1),
+        (row, col + 1),
+    ]
+
+    feasibles = []
+    for pointeable in pointeables:
+        if check_limits(pointeable):
+            feasibles.append(pointeable)
+
+    return feasibles
+
+
+grid.append(["." for _ in range(0, len(grid[0]))])
+grid.reverse()
+grid.append(["." for _ in range(0, len(grid[0]))])
+grid.reverse()
+for row in grid:
+    row.append(".")
+    row.reverse()
+    row.append(".")
+    row.reverse()
+rows = len(grid)
+cols = len(grid[0])
+
+print("Searching for free points")
+pending = [(0, 0), (0, cols - 1), (rows - 1, cols - 1), (rows - 1, 0)]
+frees = pending[:]
+visited2 = []
+
+while pending:
+    next = pending[0]
+    pending = pending[1:]
+    new_ones = [
+        point
+        for point in check_directions2(next)
+        if not point in visited and not point in pending and not point in visited2
+    ]
+    frees.extend(new_ones)
+    pending.extend(new_ones)
+    visited2.append(next)
+
+print(
+    f"Total: {rows} * {cols} = {rows*cols} The loop: {len(visited)} Free ones: {len(frees)} Inside loop: {(rows*cols)-(len(visited)+len(frees))}"
+)
+print(f"Linea: {len(grid[0])}")
+
+
+c = 0
+
+
+def visualization():
+    global c
+    for row in range(rows):
+        s = ""
+        for col in range(cols):
+            if (row, col) in visited:
+                s += Fore.RED + grid[row][col]
+            elif (row, col) in frees:
+                s += Fore.GREEN + grid[row][col]
+            else:
+                c += 1
+                s += Fore.WHITE + grid[row][col]
+
+        print(s)
+
+
+visualization()
+print(c)
