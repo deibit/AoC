@@ -18,9 +18,6 @@ class Point:
     def symbol(self) -> str:
         return grid[self.row][self.col]
 
-    def hash(self):
-        return f"{self.row}-{self.col}"
-
     def __str__(self):
         return f"{self.row}:{self.col} lvl:{self.level} sym:{self.symbol()}"
 
@@ -100,15 +97,8 @@ visited = []
 pending: List[Point] = [start()]
 
 
-def check_visited(point):
-    hashes = [p.hash() for p in visited]
-    if point.hash() in hashes:
-        return True
-    return False
-
-
 def explore(point: Point):
-    points = [new for new in surround(point) if not check_visited(new)]
+    points = [new for new in surround(point) if not (new.row, new.col) in visited]
     for p in points:
         p.level = point.level + 1
     return points
@@ -118,9 +108,9 @@ while pending:
     next = pending[0]
     pending = pending[1:]
 
-    if check_visited(next):
+    if (next.row, next.col) in visited:
         print(f"[FOUND END] {next}")
         break
 
     pending.extend(explore(next))
-    visited.append(next)
+    visited.append((next.row, next.col))
