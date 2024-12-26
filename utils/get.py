@@ -5,14 +5,17 @@ import sys
 from pathlib import Path
 
 import requests
-
 # from bs4 import BeautifulSoup
 from colorama import Fore, Style
 
-COOKIE = os.environ["AOC_COOKIE"]
+intro = """from utils.f import readinput\n\nentries = readinput(__file__)
+"""
 
-if COOKIE == None:
-    print(f"{Fore.RED}")
+COOKIE = os.environ.get("AOC_COOKIE", None)
+
+if COOKIE is None:
+    print(f"{Fore.RED} No cookie, no fun")
+    sys.exit()
 
 HEADERS = {
     "cookie": f"session={COOKIE}",
@@ -26,7 +29,7 @@ year, day = [sys.argv[1], sys.argv[2]]
 if int(day) < 10:
     day = f"0{day}"
 
-path = Path(f"{Path.cwd()}/../{year}/{day}")
+path = Path(f"{Path.cwd()}/{year}/{day}")
 
 
 def handle_error_status(code):
@@ -66,10 +69,24 @@ def save_input(year, day):
 def make_dir():
     global path
     try:
-        path.mkdir()
+        path.mkdir(parents=True, exist_ok=True)
         print(f"{Fore.BLUE}Creando directorio en {path}")
     except FileExistsError:
         print(f"{Fore.BLUE}Ya existe el {path}")
+
+    try:
+        print(f"{Fore.BLUE}Creando 1.py / 2.py / text")
+        py1 = path / "1.py"
+        py1.touch()
+        py1.open("w").write(intro)
+
+        py2 = path / "2.py"
+        py2.touch()
+        py2.open("w").write(intro)
+
+        (path / "text").touch()
+    except FileExistsError:
+        print(f"{Fore.RED}Ya estaban creados")
 
 
 if __name__ == "__main__":

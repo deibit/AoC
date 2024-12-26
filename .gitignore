@@ -3,3 +3,6 @@ input.txt
 input
 sample*
 sample
+text
+.env
+__pycache__
