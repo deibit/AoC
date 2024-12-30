@@ -66,8 +66,7 @@ def save_input(year, day):
     print(f"{Fore.BLUE}Se ha escrito el archivo {input_file}")
 
 
-def make_dir():
-    global path
+def make_dir_and_files():
     try:
         path.mkdir(parents=True, exist_ok=True)
         print(f"{Fore.BLUE}Creando directorio en {path}")
@@ -85,10 +84,11 @@ def make_dir():
         py2.open("w").write(intro)
 
         (path / "text").touch()
+        (path / "README.md").touch()
     except FileExistsError:
         print(f"{Fore.RED}Ya estaban creados")
 
 
 if __name__ == "__main__":
-    make_dir()
+    make_dir_and_files()
     save_input(year, day)

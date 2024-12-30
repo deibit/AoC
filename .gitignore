@@ -6,3 +6,5 @@ sample
 text
 .env
 __pycache__
+Session.vim
+test.txt
