@@ -8,7 +8,12 @@ import requests
 # from bs4 import BeautifulSoup
 from colorama import Fore, Style
 
-intro = """from utils.f import readinput\n\nentries = readinput(__file__)
+intro = """from utils.f import readinput, readtest
+
+entries = readinput(__file__).split('\\n')
+
+#readtest(__file__).split('\\n')
+#entries: list[str] = [e for e in entries if e]
 """
 
 COOKIE = os.environ.get("AOC_COOKIE", None)
